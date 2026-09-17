@@ -32,14 +32,19 @@ def search_certificate(target_name, start_id, max_attempts=50):
                 input_locator.first.fill(cert_number)
                 page.keyboard.press("Enter")
                 
-                # Cukup beri jeda 3 detik untuk AJAX selesai memuat, hindari networkidle yang bisa stuck
-                page.wait_for_timeout(3000)
-                
-                # Ambil teks dan html untuk mencari uuid
-                page_text = page.inner_text("body").lower()
+                # Polling cerdas: cek setiap 0.5 detik (maksimal 5 detik)
+                found = False
+                page_text = ""
+                for _ in range(10):
+                    page.wait_for_timeout(500)
+                    page_text = page.inner_text("body").lower()
+                    if target_name_lower in page_text:
+                        found = True
+                        break
+                        
                 page_html = page.content()
                 
-                if target_name_lower in page_text:
+                if found:
                     # Cari UUID dengan regex dari HTML
                     uuid_match = re.search(r'api/v1/credentials/([a-f0-9\-]{36})', page_html)
                     if not uuid_match:
