@@ -66,11 +66,11 @@ def generate():
         return redirect(url_for('index'))
 
 def keep_alive():
-    """Ping URL sendiri setiap 5 menit agar Render tidak sleep"""
-    url = "https://generator-mabim-sertif.onrender.com/ping"
+    """Ping URL sendiri setiap 14 menit agar Render tidak sleep"""
+    url = "https://generator-mabim-sertif.onrender.com"
     while True:
         try:
-            time.sleep(300) # 5 menit
+            time.sleep(840) # 14 menit
             requests.get(url)
             print(f"[Keep-Alive] Ping {url} berhasil.")
         except Exception as e:
