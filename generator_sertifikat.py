@@ -115,7 +115,7 @@ def modify_pdf(template_path, output_path, new_name, new_cert_number, qr_path):
     
     # Font name 'ti-bo' adalah Times-Bold bawaan PyMuPDF, cocok untuk nama
     font_size_name = 37
-    max_text_width = 560 # Lebar maksimal area aman (di antara maskot kiri dan ornamen kanan)
+    max_text_width = 450 # Batas area sangat aman agar tidak mengenai tangan maskot di x~190
     
     text_length = fitz.get_text_length(new_name.upper(), fontname="times-bold", fontsize=font_size_name)
     
