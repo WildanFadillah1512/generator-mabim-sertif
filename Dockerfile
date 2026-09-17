@@ -1,5 +1,5 @@
-# Gunakan image Python resmi yang ringan
-FROM python:3.11-slim
+# Gunakan image Python versi bookworm (lebih stabil dari slim untuk instalasi C-libraries)
+FROM python:3.11-bookworm
 
 # Set direktori kerja di dalam container
 WORKDIR /app
@@ -7,36 +7,10 @@ WORKDIR /app
 # Salin file requirements terlebih dahulu
 COPY requirements.txt .
 
-# Install dependencies sistem yang diperlukan oleh Playwright
-RUN apt-get update && apt-get install -y \
-    wget \
-    gnupg \
-    libglib2.0-0 \
-    libnss3 \
-    libnspr4 \
-    libatk1.0-0 \
-    libatk-bridge2.0-0 \
-    libcups2 \
-    libdrm2 \
-    libdbus-1-3 \
-    libxcb1 \
-    libxkbcommon0 \
-    libx11-6 \
-    libcomposite1 \
-    libxdamage1 \
-    libxext6 \
-    libxfixes3 \
-    libxrandr2 \
-    libgbm1 \
-    libpango-1.0-0 \
-    libcairo2 \
-    libasound2 \
-    && rm -rf /var/lib/apt/lists/*
-
 # Install python dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Install Playwright browser binaries (hanya chromium untuk menghemat tempat)
+# Install Playwright beserta dependency sistem bawaannya secara otomatis
 RUN playwright install chromium
 RUN playwright install-deps chromium
 

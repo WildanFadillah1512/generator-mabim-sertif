@@ -1,4 +1,7 @@
 import os
+import time
+import threading
+import requests
 from flask import Flask, render_template, request, send_file, flash, redirect, url_for
 from generator_sertifikat import search_certificate, generate_qr, modify_pdf
 
@@ -13,6 +16,10 @@ if not os.path.exists(OUTPUT_DIR):
 @app.route('/')
 def index():
     return render_template('index.html')
+
+@app.route('/ping')
+def ping():
+    return "OK"
 
 @app.route('/generate', methods=['POST'])
 def generate():
@@ -58,6 +65,20 @@ def generate():
         flash(f"Terjadi kesalahan internal: {str(e)}", "danger")
         return redirect(url_for('index'))
 
+def keep_alive():
+    """Ping URL sendiri setiap 5 menit agar Render tidak sleep"""
+    url = "https://generator-mabim-sertif.onrender.com/ping"
+    while True:
+        try:
+            time.sleep(300) # 5 menit
+            requests.get(url)
+            print(f"[Keep-Alive] Ping {url} berhasil.")
+        except Exception as e:
+            print(f"[Keep-Alive] Ping gagal: {e}")
+
+# Jalankan thread keep-alive hanya saat server dijalankan
+threading.Thread(target=keep_alive, daemon=True).start()
+
 if __name__ == '__main__':
     # Jalankan server
-    app.run(host='0.0.0.0', port=5000, debug=True)
+    app.run(host='0.0.0.0', port=5000, debug=False)
