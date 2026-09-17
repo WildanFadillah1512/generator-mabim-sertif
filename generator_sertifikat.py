@@ -21,7 +21,7 @@ def search_certificate(target_name, start_id, max_attempts=50):
             print(f"[*] Mencoba nomor surat: {cert_number}")
             
             try:
-                page.goto("https://certificate.nusaputra.ac.id/verify", wait_until="networkidle")
+                page.goto("https://certificate.nusaputra.ac.id/verify", wait_until="domcontentloaded", timeout=15000)
                 
                 # Mengisi form menggunakan locator paling umum untuk input teks
                 input_locator = page.locator("input[type='text']")
@@ -31,9 +31,8 @@ def search_certificate(target_name, start_id, max_attempts=50):
                 input_locator.first.fill(cert_number)
                 page.keyboard.press("Enter")
                 
-                # Tunggu navigasi atau loading selesai
-                page.wait_for_load_state("networkidle", timeout=10000)
-                time.sleep(2) # Beri jeda agar DOM selesai dirender dan result muncul
+                # Cukup beri jeda 3 detik untuk AJAX selesai memuat, hindari networkidle yang bisa stuck
+                page.wait_for_timeout(3000)
                 
                 # Ambil teks dan html untuk mencari uuid
                 page_text = page.inner_text("body").lower()
