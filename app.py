@@ -70,7 +70,7 @@ def keep_alive():
     url = "https://generator-mabim-sertif.onrender.com"
     while True:
         try:
-            time.sleep(840) # 14 menit
+            time.sleep(360) # 14 menit
             requests.get(url)
             print(f"[Keep-Alive] Ping {url} berhasil.")
         except Exception as e:
