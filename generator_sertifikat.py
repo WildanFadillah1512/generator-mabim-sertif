@@ -17,7 +17,8 @@ def search_certificate(target_name, start_id, max_attempts=50):
         
         for i in range(max_attempts):
             current_id = start_id + i
-            cert_number = f"P/{current_id}/MABIM/IX/2023"
+            # Format nomor harus 4 digit, misalnya 0736, 0021, dsb
+            cert_number = f"P/{current_id:04d}/MABIM/IX/2023"
             print(f"[*] Mencoba nomor surat: {cert_number}")
             
             try:
