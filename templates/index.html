@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MABIM Certificate Generator</title>
+    <!-- Gunakan Tailwind CSS via CDN untuk desain yang modern dan cepat -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        /* Animasi loading sederhana */
+        .loader {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #3b82f6;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            animation: spin 1s linear infinite;
+            display: inline-block;
+            vertical-align: middle;
+            margin-right: 8px;
+        }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    </style>
+</head>
+<body class="bg-slate-100 min-h-screen flex items-center justify-center p-4">
+    
+    <div class="bg-white p-8 rounded-2xl shadow-xl max-w-md w-full border border-slate-100">
+        <div class="text-center mb-8">
+            <h1 class="text-2xl font-bold text-slate-800">MABIM Certificate</h1>
+            <p class="text-slate-500 text-sm mt-2">Generator & Downloader Otomatis</p>
+        </div>
+
+        <!-- Bagian Notifikasi (Flash Messages dari Flask) -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+          {% if messages %}
+            {% for category, message in messages %}
+              <div class="mb-4 p-4 rounded-lg text-sm 
+                 {% if category == 'danger' %} bg-red-100 text-red-700 
+                 {% elif category == 'warning' %} bg-yellow-100 text-yellow-700 
+                 {% else %} bg-blue-100 text-blue-700 {% endif %}">
+                {{ message }}
+              </div>
+            {% endfor %}
+          {% endif %}
+        {% endwith %}
+
+        <form id="genForm" action="/generate" method="POST" class="space-y-5" onsubmit="showLoading()">
+            <div>
+                <label for="target_name" class="block text-sm font-semibold text-slate-700 mb-1">Nama Peserta (Yang Dicari)</label>
+                <input type="text" id="target_name" name="target_name" required placeholder="Contoh: WILDAN FADILLAH"
+                       class="w-full px-4 py-3 rounded-lg border border-slate-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all">
+            </div>
+            
+            <div>
+                <label for="start_id" class="block text-sm font-semibold text-slate-700 mb-1">Nomor Awal Tebakan</label>
+                <input type="number" id="start_id" name="start_id" required placeholder="Contoh: 2183"
+                       class="w-full px-4 py-3 rounded-lg border border-slate-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all">
+                <p class="text-xs text-slate-500 mt-1">Sistem akan mencari berurutan mulai dari nomor ini ke atas.</p>
+            </div>
+
+            <button type="submit" id="submitBtn"
+                    class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-lg transition-colors flex items-center justify-center">
+                <span id="btnText">Generate & Download PDF</span>
+            </button>
+        </form>
+    </div>
+
+    <script>
+        function showLoading() {
+            const btn = document.getElementById('submitBtn');
+            const btnText = document.getElementById('btnText');
+            btn.classList.add('opacity-80', 'cursor-not-allowed');
+            btnText.innerHTML = '<div class="loader"></div> Sedang mencari & memproses...';
+        }
+    </script>
+</body>
+</html>

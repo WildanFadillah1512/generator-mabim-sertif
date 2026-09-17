@@ -1,0 +1,22 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+.env
+.venv/
+env.bak/
+venv.bak/
+
+# Generated Files
+outputs/
+temp_qr.png
+Sertifikat_*.pdf
+*.log
+
+# Editor
+.vscode/
+.idea/
